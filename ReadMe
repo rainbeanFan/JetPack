@@ -1,0 +1,8 @@
+Navigation Graph  新型的XML资源文件，其中包含应用程序所有的页面，以及页面间的关系
+
+NavHostFragment    特殊的Fragment，其他Fragment的容器，用于展示其他Fragment
+
+NavController      用于在代码中完成Navigation Graph中具体页面的切换
+
+当切换Fragment时，使用NavController对象，并告诉它需要去Navigation Graph中的哪个Fragment，NavController会将
+想去的Fragment展示在NavHostFragment中
