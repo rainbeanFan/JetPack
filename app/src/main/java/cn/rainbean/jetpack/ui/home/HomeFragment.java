@@ -1,4 +1,4 @@
-package cn.rainbean.jetpack.fragment;
+package cn.rainbean.jetpack.ui.home;
 
 import android.os.Bundle;
 
@@ -8,26 +8,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.exoplayer2.extractor.mp4.FragmentedMp4Extractor;
+
 import androidx.navigation.Navigation;
+import cn.rainbean.basemodule.annotation.FragmentDestination;
 import cn.rainbean.jetpack.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link MainFragment#newInstance} factory method to
+ * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MainFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
+@FragmentDestination(pageUrl = "main/tabs/home",asStarter = true)
+public class HomeFragment extends Fragment {
+
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    public MainFragment() {
+    public HomeFragment() {
         // Required empty public constructor
     }
 
@@ -40,8 +44,8 @@ public class MainFragment extends Fragment {
      * @return A new instance of fragment MainFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MainFragment newInstance(String param1, String param2) {
-        MainFragment fragment = new MainFragment();
+    public static HomeFragment newInstance(String param1, String param2) {
+        HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);

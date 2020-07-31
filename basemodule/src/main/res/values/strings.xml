@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">libcommon</string>
+    <string name="empty_tips">虽然什么也没有,要不下拉刷新试试</string>
+</resources>
