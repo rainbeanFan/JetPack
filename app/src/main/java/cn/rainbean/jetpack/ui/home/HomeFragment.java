@@ -2,17 +2,27 @@ package cn.rainbean.jetpack.ui.home;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.exoplayer2.extractor.mp4.FragmentedMp4Extractor;
 
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+
+import androidx.lifecycle.Observer;
 import androidx.navigation.Navigation;
+import androidx.paging.PagedList;
+import androidx.paging.PagedListAdapter;
 import cn.rainbean.basemodule.annotation.FragmentDestination;
 import cn.rainbean.jetpack.R;
+import cn.rainbean.jetpack.exoplayer.PageListPlayDetector;
+import cn.rainbean.jetpack.exoplayer.PageListPlayManager;
+import cn.rainbean.jetpack.module.Feed;
+import cn.rainbean.jetpack.ui.AbsListFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,44 +32,42 @@ import cn.rainbean.jetpack.R;
 
 
 @FragmentDestination(pageUrl = "main/tabs/home",asStarter = true)
-public class HomeFragment extends Fragment {
+public class HomeFragment extends AbsListFragment<Feed,HomeViewModel> {
 
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private String mParam1;
-    private String mParam2;
+    private PageListPlayDetector playDetector;
+    private String feedType;
+    private boolean shouldPause = true;
 
     public HomeFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MainFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
+
+    public static HomeFragment newInstance(String feedType) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString("feedType",feedType);
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
+        mViewModel.getCacheLiveData().observe(getViewLifecycleOwner(), new Observer<PagedList<Feed>>() {
+            @Override
+            public void onChanged(PagedList<Feed> feeds) {
+                submitList(feeds);
+            }
+        });
+
+        playDetector = new PageListPlayDetector(this,mRecyclerView);
+        mViewModel.setFeedType(feedType);
+
     }
 
     @Override
@@ -73,5 +81,39 @@ public class HomeFragment extends Fragment {
          );
 
         return view;
+    }
+
+
+    @Override
+    public PagedListAdapter getAdapter() {
+
+        feedType = getArguments() == null?"all":getArguments().getString("feedType");
+
+
+
+        return new FeedAdapter(getContext(),feedType){
+
+            @Override
+            public void onViewAttachedToWindow2(ViewHolder holder) {
+                super.onViewAttachedToWindow2(holder);
+            }
+        };
+    }
+
+    @Override
+    public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+
+    }
+
+    @Override
+    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+
+    }
+
+
+    @Override
+    public void onDestroy() {
+        PageListPlayManager.release(feedType);
+        super.onDestroy();
     }
 }
