@@ -1,5 +1,7 @@
 package cn.rainbean.jetpack;
 
+import android.annotation.SuppressLint;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,7 +20,7 @@ public class MutablePageKeyedDataSource<Value> extends PageKeyedDataSource<Integ
     public List<Value> data = new ArrayList<>();
 
     public PagedList<Value> buildNewPagedList(PagedList.Config config) {
-        PagedList<Value> pagedList = new PagedList.Builder<Integer, Value>(this, config)
+        @SuppressLint("RestrictedApi") PagedList<Value> pagedList = new PagedList.Builder<Integer, Value>(this, config)
                 .setFetchExecutor(ArchTaskExecutor.getIOThreadExecutor())
                 .setNotifyExecutor(ArchTaskExecutor.getMainThreadExecutor())
                 .build();

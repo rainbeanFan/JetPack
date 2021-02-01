@@ -5,7 +5,7 @@ apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "30.0.1"
+    buildToolsVersion '30.0.2'
 
     defaultConfig {
         applicationId "cn.rainbean.jetpack"
@@ -28,28 +28,52 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+//    productFlavors {
+//
+//        development {
+//            minSdkVersion 21
+//            resConfigs ("en","xxhdpi")
+//
+//        }
+//    }
+
     dataBinding{
         enabled=true
     }
 
+    splits{
+        abi {
+            enable true
+        }
+        density {
+            enable true
+        }
+    }
+
+    if (project.hasProperty("devBuild")){
+        splits.abi.enable = false
+        splits.density.enable = false
+        aaptOptions.cruncherEnabled = false
+    }
 
 }
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.navigation:navigation-fragment:2.3.0'
-    implementation 'androidx.navigation:navigation-ui:2.3.0'
-    implementation 'androidx.preference:preference:1.1.1'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.2'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.2'
+    implementation 'androidx.preference:preference-ktx:1.1.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.8-1.4.0-rc'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.8-1.4.0-rc'
     implementation project(path: ':networklibrary')
     implementation files('libs/open_sdk_r8353806_lite.jar')
+    implementation 'androidx.paging:paging-runtime-ktx:2.1.2'
 //    implementation 'androidx.navigation:navigation-safe-args-gradle-plugin:2.3.0'
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
